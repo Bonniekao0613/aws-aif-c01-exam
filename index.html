@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AWS Certified AI Practitioner (AIF-C01) 全真模拟考系统 (英/简双语)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              900: '#0c4a6e',
+            },
+            aws: {
+              orange: '#FF9900',
+              blue: '#232F3E',
+              squid: '#161E2D'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-aws-blue text-white sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="returnToHome()">
+        <div class="bg-aws-orange text-slate-950 font-extrabold text-xs px-2.5 py-1 rounded shadow-sm">
+          AIF-C01
+        </div>
+        <div>
+          <h1 class="font-bold text-base sm:text-lg leading-tight tracking-wide">AWS AI Practitioner 模拟考试系统</h1>
+          <div class="flex items-center space-x-2">
+            <p class="text-xs text-slate-400 hidden sm:block">官方题库 · 英/简中文对照 · 考场全真还原</p>
+            <span id="cloudStatusBadge" class="hidden text-[10px] bg-emerald-900/80 text-emerald-300 border border-emerald-700 px-1.5 py-0.5 rounded">
+              ☁ 雲端題庫已連線
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls & Timer & Language Switcher -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <!-- Language Switcher -->
+        <div class="bg-slate-800 border border-slate-700 rounded-lg p-0.5 flex text-xs">
+          <button id="langBtnBoth" onclick="setLanguageMode('both')" class="px-2 py-1 rounded font-medium bg-brand-600 text-white transition">英/简双语</button>
+          <button id="langBtnZh" onclick="setLanguageMode('zh')" class="px-2 py-1 rounded font-medium text-slate-300 hover:text-white transition">仅简体</button>
+          <button id="langBtnEn" onclick="setLanguageMode('en')" class="px-2 py-1 rounded font-medium text-slate-300 hover:text-white transition">English</button>
+        </div>
+
+        <div id="timerContainer" class="hidden items-center bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+          <svg class="w-4 h-4 text-aws-orange mr-1.5 animate-pulse" fill="none" stroke="currentColor" viewBox="24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span id="timerDisplay" class="font-mono font-bold text-sm text-yellow-400">90:00</span>
+        </div>
+
+        <button id="btnExitExam" onclick="confirmExitExam()" class="hidden text-xs bg-red-600/80 hover:bg-red-600 px-3 py-1.5 rounded text-white font-medium transition">
+          结束作答
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
+
+    <!-- Screen 1: Dashboard / Home -->
+    <div id="homeScreen" class="max-w-5xl mx-auto w-full">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-100 pb-6">
+          <div>
+            <span class="inline-block bg-blue-100 text-brand-700 text-xs font-semibold px-3 py-1 rounded-full mb-2">
+              官方考试指南规格 (AIF-C01 · 真实考场无透题选项)
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">准备好迎战 AWS AI Practitioner 了吗？</h2>
+            <p class="text-slate-600 text-sm mt-1">支持英文原题与简体中文对照，已过滤所有选项剧透提示，贴合 Pearson VUE 真题体验。</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl border border-slate-100">
+              <span class="block text-2xl font-black text-brand-600" id="totalQuestionsCount">--</span>
+              <span class="text-xs text-slate-500 font-medium">当前题库总数</span>
+            </div>
+            <div class="text-center px-4 py-2 bg-slate-50 rounded-xl border border-slate-100">
+              <span class="block text-2xl font-black text-amber-600">700/1000</span>
+              <span class="text-xs text-slate-500 font-medium">及格门槛 (70%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode Selectors: 4 Cards (Grid 2x2) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+          <!-- Full Exam Card -->
+          <div class="border-2 border-brand-100 hover:border-brand-500 bg-gradient-to-br from-white to-blue-50/40 rounded-xl p-5 transition shadow-sm hover:shadow group flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-lg bg-brand-500 text-white flex items-center justify-center font-bold text-lg">
+                  ⏱
+                </div>
+                <span class="text-xs font-semibold px-2 py-1 bg-brand-100 text-brand-700 rounded">全真计时模式</span>
+              </div>
+              <h3 class="font-bold text-lg text-slate-900 group-hover:text-brand-600 transition">全真随机模拟考试</h3>
+              <p class="text-xs text-slate-500 mt-1 mb-3 leading-relaxed">
+                以 Fisher-Yates 真正随机抽取。交卷后生成中英文成绩单、五大领域能力诊断与完整考点解析。
+              </p>
+
+              <div class="bg-white/80 p-3 rounded-lg border border-slate-200 mb-3 space-y-2">
+                <div class="flex items-center justify-between text-xs font-medium text-slate-700">
+                  <span>抽取题数：</span>
+                  <select id="examQuestionCountSelect" class="border border-slate-300 rounded px-2 py-1 text-xs bg-white focus:ring-1 focus:ring-brand-500 outline-none">
+                    <option value="25">25 题 (快速刷题 · 限时 35 分钟)</option>
+                    <option value="50">50 题 (高强度练习 · 限时 70 分钟)</option>
+                    <option value="65" selected>65 题 (官方全真标准 · 限时 90 分钟)</option>
+                    <option value="all">全量题库刷题 (全题库挑战)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <button onclick="startFullExam()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center shadow-sm">
+              开始随机抽题测验 &rarr;
+            </button>
+          </div>
+
+          <!-- Practice Mode Card -->
+          <div class="border-2 border-emerald-100 hover:border-emerald-500 bg-gradient-to-br from-white to-emerald-50/40 rounded-xl p-5 transition shadow-sm hover:shadow group flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-lg">
+                  📖
+                </div>
+                <span class="text-xs font-semibold px-2 py-1 bg-emerald-100 text-emerald-800 rounded">随选自主练习</span>
+              </div>
+              <h3 class="font-bold text-lg text-slate-900 group-hover:text-emerald-700 transition">自主刷题与即时中英题解</h3>
+              <p class="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+                做一题看一题，无时间压力。即时核对答案并深入剖析 Bedrock、SageMaker 等 AWS 官方考点。
+              </p>
+            </div>
+            <button onclick="startPracticeMode('ALL')" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center shadow-sm">
+              进入自主刷题模式 &rarr;
+            </button>
+          </div>
+
+          <!-- Bookmarked Questions Review Card -->
+          <div class="border-2 border-amber-100 hover:border-amber-500 bg-gradient-to-br from-white to-amber-50/40 rounded-xl p-5 transition shadow-sm hover:shadow group flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold text-lg">
+                  ★
+                </div>
+                <span class="text-xs font-semibold px-2 py-1 bg-amber-100 text-amber-800 rounded" id="homeBookmarkedBadge">0 题标记</span>
+              </div>
+              <h3 class="font-bold text-lg text-slate-900 group-hover:text-amber-600 transition">标记复习专区 (Bookmarks)</h3>
+              <p class="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+                专项重练您在平时做题中点击「★ 标记复习」保存的疑难题，加深印象、扫除考点盲区。
+              </p>
+            </div>
+            <button onclick="startReviewMode('bookmarks')" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center shadow-sm">
+              复习已标记题目 (<span id="btnBookmarkCount">0</span>) &rarr;
+            </button>
+          </div>
+
+          <!-- Mistake History Review Card -->
+          <div class="border-2 border-rose-100 hover:border-rose-500 bg-gradient-to-br from-white to-rose-50/40 rounded-xl p-5 transition shadow-sm hover:shadow group flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <div class="w-10 h-10 rounded-lg bg-rose-600 text-white flex items-center justify-center font-bold text-lg">
+                  ❌
+                </div>
+                <span class="text-xs font-semibold px-2 py-1 bg-rose-100 text-rose-800 rounded" id="homeMistakesBadge">0 题错题</span>
+              </div>
+              <h3 class="font-bold text-lg text-slate-900 group-hover:text-rose-600 transition">历史错题强化专区</h3>
+              <p class="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+                自动汇集历次模拟考试与练习中回答错误的题目，针对薄弱题型重点二刷，直到彻底吃透！
+              </p>
+            </div>
+            <button onclick="startReviewMode('mistakes')" class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-bold transition flex items-center justify-center shadow-sm">
+              强化重练错题 (<span id="btnMistakeCount">0</span>) &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- Category Quick Selection -->
+        <div class="mt-8 pt-6 border-t border-slate-100">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-sm font-bold text-slate-700">按官方考试领域 (Domain) 专练：</h4>
+            <div class="flex items-center space-x-3">
+              <button type="button" onclick="toggleImportModal()" class="text-xs text-brand-600 hover:text-brand-800 font-medium underline cursor-pointer">
+                + 跨电脑題庫備份 / 手動匯入
+              </button>
+              <button type="button" onclick="resetQuestionBank()" class="text-xs text-slate-400 hover:text-red-500 font-medium cursor-pointer">
+                重置題庫快取
+              </button>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2" id="domainFilterButtons">
+            <!-- Buttons rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats & Study Tips -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center space-x-3">
+          <div class="text-2xl">🛡️</div>
+          <div>
+            <div class="text-xs text-slate-500">重點服務</div>
+            <div class="text-sm font-bold text-slate-800">Bedrock Guardrails (防護機制)</div>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center space-x-3">
+          <div class="text-2xl">📊</div>
+          <div>
+            <div class="text-xs text-slate-500">可解釋性與偏差</div>
+            <div class="text-sm font-bold text-slate-800">SageMaker Clarify (SHAP)</div>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center space-x-3">
+          <div class="text-2xl">🔒</div>
+          <div>
+            <div class="text-xs text-slate-500">合規審計與報告</div>
+            <div class="text-sm font-bold text-slate-800">AWS Artifact & PrivateLink</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Exam / Question View -->
+    <div id="quizScreen" class="hidden flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+      
+      <!-- Left Column: Question Area -->
+      <div class="lg:col-span-3 space-y-4">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+          
+          <!-- Top Tag Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4 mb-5">
+            <div class="flex items-center space-x-2">
+              <span id="currentQuestionBadge" class="bg-brand-100 text-brand-700 text-xs font-bold px-3 py-1 rounded-md">
+                第 1 题
+              </span>
+              <span id="questionDomainBadge" class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-md font-medium">
+                Domain
+              </span>
+              <span id="questionTypeBadge" class="text-xs font-medium text-slate-400">
+                [单选题]
+              </span>
+            </div>
+
+            <!-- Mark / Bookmark button -->
+            <button id="btnBookmark" onclick="toggleBookmarkCurrent()" class="flex items-center text-xs font-medium text-slate-500 hover:text-amber-500 px-2.5 py-1 rounded border border-slate-200 transition">
+              <span id="bookmarkStar" class="mr-1">☆</span>
+              <span id="bookmarkText">标记复习</span>
+            </button>
+          </div>
+
+          <!-- Question Content -->
+          <div class="mb-6 space-y-2">
+            <div id="questionTextBox"></div>
+          </div>
+
+          <!-- Options Container -->
+          <div id="optionsContainer" class="space-y-3"></div>
+
+          <!-- Instant Feedback (Practice Mode only) -->
+          <div id="feedbackBox" class="hidden mt-6 p-4 rounded-xl border">
+            <div class="flex items-center mb-2 font-bold text-sm" id="feedbackTitle"></div>
+            <div id="feedbackExplanation" class="text-xs sm:text-sm leading-relaxed text-slate-700 whitespace-pre-line"></div>
+          </div>
+
+          <!-- Nav Footer -->
+          <div class="flex items-center justify-between mt-8 pt-6 border-t border-slate-100">
+            <button id="btnPrev" onclick="prevQuestion()" class="px-4 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition">
+              &larr; 上一题
+            </button>
+
+            <div class="flex items-center space-x-2">
+              <button id="btnNext" onclick="nextQuestion()" class="px-5 py-2 bg-brand-600 text-white rounded-lg text-xs sm:text-sm font-medium hover:bg-brand-700 transition">
+                下一题 &rarr;
+              </button>
+              <button id="btnSubmitExam" onclick="submitExamPrompt()" class="hidden px-5 py-2 bg-aws-orange text-slate-950 font-bold rounded-lg text-xs sm:text-sm hover:brightness-105 transition shadow-sm">
+                确认交卷
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right Column: Navigation Grid -->
+      <div class="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sticky top-20">
+        <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+          <h4 class="font-bold text-sm text-slate-800">答题卡总览</h4>
+          <span id="answeredRatio" class="text-xs text-slate-500 font-mono">0 / 0</span>
+        </div>
+
+        <div id="navGrid" class="grid grid-cols-5 gap-2 max-h-72 overflow-y-auto custom-scrollbar p-1"></div>
+
+        <!-- Legend -->
+        <div class="mt-4 pt-3 border-t border-slate-100 text-[11px] text-slate-500 space-y-1.5">
+          <div class="flex items-center"><span class="w-3 h-3 rounded bg-brand-600 mr-2"></span> 当前题号</div>
+          <div class="flex items-center"><span class="w-3 h-3 rounded bg-blue-100 text-brand-700 border border-brand-300 mr-2"></span> 已作答</div>
+          <div class="flex items-center"><span class="w-3 h-3 rounded bg-amber-100 border border-amber-400 mr-2"></span> 标记待复查</div>
+          <div class="flex items-center"><span class="w-3 h-3 rounded bg-slate-100 border border-slate-200 mr-2"></span> 未作答</div>
+        </div>
+
+        <button onclick="submitExamPrompt()" class="w-full mt-5 py-2.5 bg-slate-900 text-white font-medium rounded-xl text-xs hover:bg-slate-800 transition">
+          完成作答并交卷
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Screen 3: Results & Diagnostic Report -->
+    <div id="resultScreen" class="hidden max-w-4xl mx-auto w-full">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 mb-6">
+        
+        <div class="text-center pb-6 border-b border-slate-100">
+          <div id="resultStatusIcon" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-3 shadow-inner">
+            🎉
+          </div>
+          <h2 id="resultStatusTitle" class="text-2xl sm:text-3xl font-black text-slate-900">测验完成！</h2>
+          <p id="resultStatusSubtitle" class="text-sm text-slate-500 mt-1">以下是您的 AWS AIF-C01 模拟考试诊断成绩单</p>
+        </div>
+
+        <!-- Score Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+            <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider">估算换算分</span>
+            <div id="scaledScoreDisplay" class="text-3xl font-black text-brand-600 mt-1">820 / 1000</div>
+            <span class="text-[11px] text-slate-400">及格线: 700 分</span>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+            <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider">正确率</span>
+            <div id="accuracyDisplay" class="text-3xl font-black text-slate-800 mt-1">85%</div>
+            <span id="correctRatioText" class="text-[11px] text-slate-400">20 / 25 题</span>
+          </div>
+
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+            <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider">考核结果</span>
+            <div id="passFailBadge" class="text-2xl font-black text-emerald-600 mt-2">PASS 通过</div>
+          </div>
+        </div>
+
+        <!-- Domain Breakdown -->
+        <div class="mt-8">
+          <h4 class="font-bold text-base text-slate-900 mb-3">各领域表现评估 (Domain Breakdown)：</h4>
+          <div id="domainProgressBars" class="space-y-3"></div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-3 mt-8 pt-6 border-t border-slate-100">
+          <button onclick="reviewWrongAnswers()" id="btnReviewWrong" class="px-5 py-2.5 bg-rose-600 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-rose-700 transition">
+            重练错题 (<span id="wrongCountDisplay">0</span> 题)
+          </button>
+          <button onclick="reviewAllAnswers()" class="px-5 py-2.5 bg-slate-800 text-white rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-700 transition">
+            查看全部题解
+          </button>
+          <button onclick="returnToHome()" class="px-5 py-2.5 border border-slate-300 text-slate-700 rounded-xl text-xs sm:text-sm font-semibold hover:bg-slate-50 transition">
+            返回主页
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Import / Export Modal -->
+  <div id="importModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4" onclick="handleBackdropClick(event)">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-slate-200" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="font-bold text-base text-slate-900">題庫備份與雲端同步</h3>
+        <button type="button" onclick="toggleImportModal()" class="text-slate-400 hover:text-slate-600 font-bold text-xl leading-none cursor-pointer">&times;</button>
+      </div>
+
+      <div class="my-4 bg-emerald-50/70 p-4 rounded-xl border border-emerald-200 space-y-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="block text-xs font-bold text-emerald-900">下載完整題庫備份檔：</span>
+            <span class="text-[11px] text-emerald-700">下載此檔案並上傳至 GitHub 倉庫改名為 questions.json 即可實現全球免匯入！</span>
+          </div>
+          <button type="button" onclick="exportFullQuestionBank()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm transition shrink-0">
+            📥 下載題庫備份
+          </button>
+        </div>
+      </div>
+
+      <p class="text-xs text-slate-500 mb-2">
+        或手動貼上備份 JSON 進行單機復原：
+      </p>
+      <textarea id="importJsonTextarea" class="w-full h-40 border border-slate-200 rounded-xl p-3 text-xs font-mono focus:ring-2 focus:ring-brand-500 outline-none" placeholder='貼上備份 JSON 內容...'></textarea>
+      <div class="flex justify-end space-x-2 mt-4">
+        <button type="button" onclick="toggleImportModal()" class="px-4 py-2 border rounded-lg text-xs text-slate-600 hover:bg-slate-50 cursor-pointer">取消</button>
+        <button type="button" onclick="handleImportQuestions()" class="px-4 py-2 bg-brand-600 text-white rounded-lg text-xs font-bold hover:bg-brand-700 cursor-pointer">確認導入</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+    AWS Certified AI Practitioner (AIF-C01) 全真考古题训练系统 &copy; 2026
+  </footer>
+
+  <script>
+    /**
+     * Base Baseline Question Bank
+     */
+    let QUESTION_BANK = [
+      {
+        id: 1,
+        domain: "Domain 5: 安全性、合规与管控",
+        question: "An AI practitioner trained a custom model on Amazon Bedrock by using a training dataset that contains confidential data. The AI practitioner wants to ensure that the custom model does not generate inference responses based on confidential data. How should the AI practitioner prevent responses based on confidential data?",
+        question_zh: "一名 AI 从业者在 Amazon Bedrock 上使用包含机密数据的训练数据集训练了一个自定义模型。该从业者希望确保该模型在推理时不会基于机密数据生成回复。应该如何防止基于机密数据生成响应？",
+        options: [
+          "Delete the custom model. Remove the confidential data from the training dataset. Retrain the custom model.",
+          "Mask the confidential data in the inference responses by using dynamic data masking.",
+          "Encrypt the confidential data in the inference responses by using Amazon SageMaker.",
+          "Encrypt the confidential data in the custom model by using AWS Key Management Service (AWS KMS)."
+        ],
+        options_zh: [
+          "删除该自定义模型。从训练数据集中移除机密数据。重新训练自定义模型。",
+          "使用动态数据脱敏技术对推理响应中的机密数据进行掩码。",
+          "使用 Amazon SageMaker 对推理响应中的机密数据进行加密。",
+          "使用 AWS Key Management Service (AWS KMS) 加密自定义模型中的机密数据。"
+        ],
+        answer: 0,
+        rationale: "【核心考点：模型机密数据泄露防范】\n当模型在包含机密或敏感数据的数据集上完成训练后，其权重可能已经隐式学习或记忆了该机密信息。彻底确保模型不产生机密推理的唯一方法是：删除该模型，清洗数据源，并从头重新训练。"
+      },
+      {
+        id: 2,
+        domain: "Domain 3: 基础模型的应用",
+        question: "Which feature of Amazon OpenSearch Service gives companies the ability to build vector database applications?",
+        question_zh: "Amazon OpenSearch Service 的哪项功能使企业能够构建向量数据库应用程序？",
+        options: [
+          "Integration with Amazon S3 for object storage",
+          "Support for geospatial indexing and queries",
+          "Scalable index management and nearest neighbor search capability",
+          "Ability to perform real-time analysis on streaming data"
+        ],
+        options_zh: [
+          "与 Amazon S3 集成进行对象存储",
+          "支持地理空间索引和查询",
+          "可扩展的索引管理以及近邻搜索能力",
+          "对流式数据执行实时分析的能力"
+        ],
+        answer: 2,
+        rationale: "【核心考点：向量数据库与检索增强生成 RAG】\nAmazon OpenSearch Service 支持 k-最近邻 (k-NN) 算法与可扩展的向量索引管理，允许对生成式 AI 产生的高维向量嵌入 (Embeddings) 进行语义相似度搜索。"
+      },
+      {
+        id: 3,
+        domain: "Domain 2: 生成式 AI 的基础知识",
+        question: "A company wants to display the total sales for its top-selling products across various retail locations in the past 12 months. Which AWS solution should the company use to automate the generation of graphs?",
+        question_zh: "某公司希望展示过去 12 个月内各零售点畅销产品的总销售额。该公司应使用哪种 AWS 解决方案通过自然语言自动化生成图表？",
+        options: [
+          "Amazon Q in Amazon EC2",
+          "Amazon Q Developer",
+          "Amazon Q in Amazon QuickSight",
+          "Amazon Q in AWS Chatbot"
+        ],
+        options_zh: [
+          "Amazon EC2 中的 Amazon Q",
+          "Amazon Q Developer",
+          "Amazon QuickSight 中的 Amazon Q",
+          "AWS Chatbot 中的 Amazon Q"
+        ],
+        answer: 2,
+        rationale: "【核心考点：Generative BI 生成式商业智能】\nAmazon Q in QuickSight 允许业务人员直接输入自然语言问题，系统自动理解数据结构并生成可视化图表、执行摘要与数据故事。"
+      },
+      {
+        id: 4,
+        domain: "Domain 4: 负责任 AI 的指南",
+        question: "A company wants to build an interactive application for children that generates new stories based on classic stories. The company wants to use Amazon Bedrock and needs to ensure that the results and topics are appropriate for children. Which AWS service or feature will meet these requirements?",
+        question_zh: "某公司希望为儿童开发一款基于经典故事生成新故事的交互式应用。该公司希望使用 Amazon Bedrock，并需要确保生成的结果和主题适合儿童。哪项 AWS 服务或功能可以满足此要求？",
+        options: [
+          "Amazon Rekognition",
+          "Amazon Bedrock playgrounds",
+          "Guardrails for Amazon Bedrock",
+          "Agents for Amazon Bedrock"
+        ],
+        options_zh: [
+          "Amazon Rekognition",
+          "Amazon Bedrock 演练场",
+          "Guardrails for Amazon Bedrock",
+          "Agents for Amazon Bedrock"
+        ],
+        answer: 2,
+        rationale: "【核心考点：生成式 AI 内容安全防护】\nGuardrails for Amazon Bedrock 允许用户定义拒绝主题 (Denied Topics)、敏感词过滤、有害内容拦截以及防止幻觉的上下文接地检查，确保模型输出安全。"
+      },
+      {
+        id: 5,
+        domain: "Domain 1: AI 和 ML 的基础知识",
+        question: "A company has developed an ML model for image classification. The company wants to deploy the model to production so that a web application can use the model without managing underlying infrastructure. Which solution will meet these requirements?",
+        question_zh: "某公司开发了一个图像分类模型，希望将其部署到生产环境且无需管理任何底层基础设施。哪种方案满足要求？",
+        options: [
+          "Use Amazon SageMaker Serverless Inference to deploy the model.",
+          "Use Amazon CloudFront to deploy the model.",
+          "Use Amazon API Gateway to host the model and serve predictions.",
+          "Use AWS Batch to host the model and serve predictions."
+        ],
+        options_zh: [
+          "使用 Amazon SageMaker 无服务器推理部署模型。",
+          "使用 Amazon CloudFront 部署模型。",
+          "使用 Amazon API Gateway 托管模型并提供预测。",
+          "使用 AWS Batch 托管模型并提供预测。"
+        ],
+        answer: 0,
+        rationale: "【核心考点：SageMaker 推理部署选项】\nSageMaker Serverless Inference 专为无运维需求、间歇性推理负载设计，自动扩缩容至零，无需管理任何底层 EC2 算力。"
+      },
+      {
+        id: 107,
+        domain: "Domain 1: AI 和 ML 的基础知识",
+        question: "A company wants to build an ML application. Select and order the correct steps from the following list to develop a well-architected ML workload. Each step should be selected one time. (Select and order FOUR.)",
+        question_zh: "【HOTSPOT 排序题】某公司希望构建一个机器学习应用。请从下列选项中选择并按正确顺序排列构建良好架构 ML 工作负载的步骤：",
+        options: [
+          "Step 1: Define business goal and frame ML problem -> Step 2: Develop model -> Step 3: Deploy model -> Step 4: Monitor model",
+          "Step 1: Develop model -> Step 2: Define business goal and frame ML problem -> Step 3: Deploy model -> Step 4: Monitor model",
+          "Step 1: Define business goal and frame ML problem -> Step 2: Deploy model -> Step 3: Develop model -> Step 4: Monitor model",
+          "Step 1: Develop model -> Step 2: Deploy model -> Step 3: Monitor model -> Step 4: Define business goal and frame ML problem"
+        ],
+        options_zh: [
+          "步骤 1：明确业务目标并构建 ML 问题 -> 步骤 2：开发模型 -> 步骤 3：部署模型 -> 步骤 4：监控模型",
+          "步骤 1：开发模型 -> 步骤 2：明确业务目标并构建 ML 问题 -> 步骤 3：部署模型 -> 步骤 4：监控模型",
+          "步骤 1：明确业务目标并构建 ML 问题 -> 步骤 2：部署模型 -> 步骤 3：开发模型 -> 步骤 4：监控模型",
+          "步骤 1：开发模型 -> 步骤 2：部署模型 -> 步骤 3：监控模型 -> 步骤 4：明确业务目标并构建 ML 问题"
+        ],
+        answer: 0,
+        rationale: "【核心考点：ML 完整生命周期标准工作流】\n标准流水线顺序为：1. 明确业务目标与问题框架 -> 2. 模型开发与训练 -> 3. 部署模型 -> 4. 生产环境监控模型。"
+      }
+    ];
+
+    /**
+     * Application State
+     */
+    let state = {
+      langMode: 'both',
+      mode: 'exam',
+      activeQuestions: [],
+      currentIndex: 0,
+      userAnswers: {},
+      bookmarkedIds: new Set(),
+      mistakeIds: new Set(),
+      timerInterval: null,
+      secondsRemaining: 90 * 60,
+      isSubmitted: false
+    };
+
+    function cleanOptionText(text) {
+      if (!text) return '';
+      let cleaned = text.replace(/\s*[\(（](?:如|专用于|属于|基于|使用|仅用于|适用|适合|对标|内置|衡量|预测|惩罚|必须|核心|无监督|监督|由于|即|可用于|这是)[^\)）]*[\)）]\s*$/g, '');
+      return cleaned.trim();
+    }
+
+    function fisherYatesShuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    /**
+     * NEW: Load from questions.json hosted on GitHub Pages if available
+     */
+    async function loadQuestionsFromCloud() {
+      try {
+        const res = await fetch('questions.json?t=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
+          const list = Array.isArray(data) ? data : (data.questions || []);
+          if (list.length > 0) {
+            const existingMap = new Map();
+            QUESTION_BANK.forEach(q => existingMap.set(q.id, q));
+            list.forEach(q => existingMap.set(q.id, q));
+            QUESTION_BANK = Array.from(existingMap.values());
+
+            const badge = document.getElementById('cloudStatusBadge');
+            if (badge) {
+              badge.innerText = `☁ 雲端全量題庫 (${QUESTION_BANK.length} 題已連線)`;
+              badge.classList.remove('hidden');
+            }
+            console.log(`Cloud bank loaded successfully: ${QUESTION_BANK.length} questions`);
+          }
+        }
+      } catch (e) {
+        console.log("No cloud questions.json detected, using local storage/built-in bank.");
+      }
+    }
+
+    window.onload = async function() {
+      loadCustomBankFromStorage();
+      loadBookmarksAndMistakesFromStorage();
+      await loadQuestionsFromCloud();
+      updateTotalQuestionsBadge();
+      updateHomeBadges();
+      renderDomainFilters();
+    };
+
+    function loadCustomBankFromStorage() {
+      try {
+        const stored = localStorage.getItem('AWS_AIF_CUSTOM_QUESTIONS');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const existingMap = new Map();
+            QUESTION_BANK.forEach(q => existingMap.set(q.id, q));
+            parsed.forEach(q => existingMap.set(q.id, q));
+            QUESTION_BANK = Array.from(existingMap.values());
+          }
+        }
+      } catch (e) {
+        console.error("Storage load error", e);
+      }
+    }
+
+    function loadBookmarksAndMistakesFromStorage() {
+      try {
+        const bm = localStorage.getItem('AWS_AIF_BOOKMARKS');
+        if (bm) state.bookmarkedIds = new Set(JSON.parse(bm));
+
+        const ms = localStorage.getItem('AWS_AIF_MISTAKES');
+        if (ms) state.mistakeIds = new Set(JSON.parse(ms));
+      } catch (e) {
+        console.error("Storage bookmarks load error", e);
+      }
+    }
+
+    function saveBookmarksToStorage() {
+      try {
+        localStorage.setItem('AWS_AIF_BOOKMARKS', JSON.stringify(Array.from(state.bookmarkedIds)));
+        updateHomeBadges();
+      } catch (e) {
+        console.error("Save bookmarks error", e);
+      }
+    }
+
+    function saveMistakesToStorage() {
+      try {
+        localStorage.setItem('AWS_AIF_MISTAKES', JSON.stringify(Array.from(state.mistakeIds)));
+        updateHomeBadges();
+      } catch (e) {
+        console.error("Save mistakes error", e);
+      }
+    }
+
+    function updateHomeBadges() {
+      const bmCount = state.bookmarkedIds.size;
+      const msCount = state.mistakeIds.size;
+
+      const bmBadge = document.getElementById('homeBookmarkedBadge');
+      if (bmBadge) bmBadge.innerText = `${bmCount} 题标记`;
+      const btnBm = document.getElementById('btnBookmarkCount');
+      if (btnBm) btnBm.innerText = bmCount;
+
+      const msBadge = document.getElementById('homeMistakesBadge');
+      if (msBadge) msBadge.innerText = `${msCount} 题错题`;
+      const btnMs = document.getElementById('btnMistakeCount');
+      if (btnMs) btnMs.innerText = msCount;
+    }
+
+    function updateTotalQuestionsBadge() {
+      const badge = document.getElementById('totalQuestionsCount');
+      if (badge) {
+        badge.innerText = `${QUESTION_BANK.length}+`;
+      }
+    }
+
+    function startFullExam() {
+      const selectElem = document.getElementById('examQuestionCountSelect');
+      const val = selectElem ? selectElem.value : "65";
+      
+      const shuffledBank = fisherYatesShuffle(QUESTION_BANK);
+
+      let targetCount = 65;
+      let durationMinutes = 90;
+
+      if (val === '25') {
+        targetCount = 25;
+        durationMinutes = 35;
+      } else if (val === '50') {
+        targetCount = 50;
+        durationMinutes = 70;
+      } else if (val === '65') {
+        targetCount = Math.min(65, shuffledBank.length);
+        durationMinutes = 90;
+      } else {
+        targetCount = shuffledBank.length;
+        durationMinutes = Math.round(shuffledBank.length * 1.4);
+      }
+
+      state.mode = 'exam';
+      state.activeQuestions = shuffledBank.slice(0, targetCount);
+      state.currentIndex = 0;
+      state.userAnswers = {};
+      state.secondsRemaining = durationMinutes * 60;
+      state.isSubmitted = false;
+
+      document.getElementById('homeScreen').classList.add('hidden');
+      document.getElementById('resultScreen').classList.add('hidden');
+      document.getElementById('quizScreen').classList.remove('hidden');
+      document.getElementById('btnExitExam').classList.remove('hidden');
+      document.getElementById('timerContainer').classList.remove('hidden');
+      document.getElementById('feedbackBox').classList.add('hidden');
+
+      startTimer();
+      renderQuestion();
+      renderNavGrid();
+    }
+
+    function startPracticeMode(domain = 'ALL') {
+      let filtered = QUESTION_BANK;
+      if (domain !== 'ALL') {
+        filtered = QUESTION_BANK.filter(q => q.domain && q.domain.includes(domain));
+      }
+      
+      state.mode = 'practice';
+      state.activeQuestions = fisherYatesShuffle(filtered);
+      state.currentIndex = 0;
+      state.userAnswers = {};
+      state.isSubmitted = false;
+
+      document.getElementById('homeScreen').classList.add('hidden');
+      document.getElementById('resultScreen').classList.add('hidden');
+      document.getElementById('quizScreen').classList.remove('hidden');
+      document.getElementById('btnExitExam').classList.remove('hidden');
+      document.getElementById('timerContainer').classList.add('hidden');
+      clearInterval(state.timerInterval);
+
+      renderQuestion();
+      renderNavGrid();
+    }
+
+    function startReviewMode(type) {
+      let targetIds = type === 'bookmarks' ? state.bookmarkedIds : state.mistakeIds;
+      if (!targetIds || targetIds.size === 0) {
+        alertModal(type === 'bookmarks' 
+          ? "您目前尚未标记任何题目！在答题时点击右上角「☆ 标记复习」即可加入。" 
+          : "太棒了！您当前没有历史错题记录。进行模拟考或练习答错后会自动归纳至此。");
+        return;
+      }
+
+      const qMap = new Map(QUESTION_BANK.map(q => [q.id, q]));
+      const list = [];
+      targetIds.forEach(id => {
+        if (qMap.has(id)) list.push(qMap.get(id));
+      });
+
+      if (list.length === 0) {
+        alertModal("未在当前题库中找到对应的题目。");
+        return;
+      }
+
+      state.mode = 'practice';
+      state.activeQuestions = list;
+      state.currentIndex = 0;
+      state.userAnswers = {};
+      state.isSubmitted = false;
+
+      document.getElementById('homeScreen').classList.add('hidden');
+      document.getElementById('resultScreen').classList.add('hidden');
+      document.getElementById('quizScreen').classList.remove('hidden');
+      document.getElementById('btnExitExam').classList.remove('hidden');
+      document.getElementById('timerContainer').classList.add('hidden');
+      clearInterval(state.timerInterval);
+
+      renderQuestion();
+      renderNavGrid();
+    }
+
+    function startTimer() {
+      clearInterval(state.timerInterval);
+      updateTimerDisplay();
+      state.timerInterval = setInterval(() => {
+        state.secondsRemaining--;
+        updateTimerDisplay();
+        if (state.secondsRemaining <= 0) {
+          clearInterval(state.timerInterval);
+          alertModal("考试时间到！系统将为您自动交卷。", () => {
+            submitExam();
+          });
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(state.secondsRemaining / 60);
+      const seconds = state.secondsRemaining % 60;
+      const display = document.getElementById('timerDisplay');
+      if (display) {
+        display.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        if (state.secondsRemaining < 300) {
+          display.className = "font-mono font-bold text-sm text-red-500 animate-pulse";
+        } else {
+          display.className = "font-mono font-bold text-sm text-yellow-400";
+        }
+      }
+    }
+
+    function setLanguageMode(mode) {
+      state.langMode = mode;
+      
+      document.getElementById('langBtnBoth').className = mode === 'both' ? 'px-2 py-1 rounded font-medium bg-brand-600 text-white transition' : 'px-2 py-1 rounded font-medium text-slate-300 hover:text-white transition';
+      document.getElementById('langBtnZh').className = mode === 'zh' ? 'px-2 py-1 rounded font-medium bg-brand-600 text-white transition' : 'px-2 py-1 rounded font-medium text-slate-300 hover:text-white transition';
+      document.getElementById('langBtnEn').className = mode === 'en' ? 'px-2 py-1 rounded font-medium bg-brand-600 text-white transition' : 'px-2 py-1 rounded font-medium text-slate-300 hover:text-white transition';
+
+      if (!document.getElementById('quizScreen').classList.contains('hidden')) {
+        renderQuestion();
+      }
+    }
+
+    function renderQuestion() {
+      const q = state.activeQuestions[state.currentIndex];
+      if (!q) return;
+
+      document.getElementById('currentQuestionBadge').innerText = `第 ${state.currentIndex + 1} / ${state.activeQuestions.length} 题`;
+      document.getElementById('questionDomainBadge').innerText = q.domain || "AWS AI Exam";
+
+      const qBox = document.getElementById('questionTextBox');
+      let html = '';
+      if (state.langMode === 'both') {
+        html = `
+          <div class="space-y-2">
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">${q.question_zh || q.question}</h3>
+            <p class="text-xs sm:text-sm text-slate-500 italic border-l-2 border-slate-300 pl-3 leading-relaxed">${q.question}</p>
+          </div>
+        `;
+      } else if (state.langMode === 'zh') {
+        html = `<h3 class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">${q.question_zh || q.question}</h3>`;
+      } else {
+        html = `<h3 class="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">${q.question}</h3>`;
+      }
+      qBox.innerHTML = html;
+
+      const optContainer = document.getElementById('optionsContainer');
+      optContainer.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      const selectedAnswer = state.userAnswers[q.id];
+
+      q.options.forEach((optEnRaw, idx) => {
+        const optZhRaw = q.options_zh && q.options_zh[idx] ? q.options_zh[idx] : optEnRaw;
+        const optZh = cleanOptionText(optZhRaw);
+        const optEn = cleanOptionText(optEnRaw);
+
+        const isSelected = selectedAnswer === idx;
+        
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left p-3.5 sm:p-4 rounded-xl border transition flex items-start space-x-3 text-xs sm:text-sm ${
+          isSelected 
+            ? 'bg-brand-50 border-brand-500 ring-2 ring-brand-500/20 text-slate-900' 
+            : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/70 text-slate-700'
+        }`;
+        
+        btn.onclick = () => selectOption(idx);
+
+        let optContent = '';
+        if (state.langMode === 'both') {
+          optContent = `
+            <div class="flex-1">
+              <div class="font-medium text-slate-900">${optZh}</div>
+              <div class="text-[11px] sm:text-xs text-slate-400 mt-0.5">${optEn}</div>
+            </div>
+          `;
+        } else if (state.langMode === 'zh') {
+          optContent = `<div class="flex-1 font-medium text-slate-900">${optZh}</div>`;
+        } else {
+          optContent = `<div class="flex-1 font-medium text-slate-900">${optEn}</div>`;
+        }
+
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${
+            isSelected ? 'bg-brand-600 text-white' : 'bg-slate-100 text-slate-600'
+          }">${letters[idx]}</span>
+          ${optContent}
+        `;
+
+        optContainer.appendChild(btn);
+      });
+
+      const isBookmarked = state.bookmarkedIds.has(q.id);
+      document.getElementById('bookmarkStar').innerText = isBookmarked ? '★' : '☆';
+      document.getElementById('bookmarkStar').className = isBookmarked ? 'text-amber-500 mr-1 font-bold text-sm' : 'mr-1 text-sm';
+      document.getElementById('bookmarkText').innerText = isBookmarked ? '已标记复习' : '标记复习';
+
+      const feedbackBox = document.getElementById('feedbackBox');
+      if (state.mode === 'practice' && selectedAnswer !== undefined) {
+        feedbackBox.classList.remove('hidden');
+        const isCorrect = selectedAnswer === q.answer;
+        if (isCorrect) {
+          feedbackBox.className = "mt-6 p-4 rounded-xl border border-emerald-200 bg-emerald-50/80 text-emerald-900";
+          document.getElementById('feedbackTitle').innerHTML = '✅ 回答正确 (Correct!)';
+        } else {
+          feedbackBox.className = "mt-6 p-4 rounded-xl border border-rose-200 bg-rose-50/80 text-rose-900";
+          document.getElementById('feedbackTitle').innerHTML = `❌ 回答错误！正确答案是: ${letters[q.answer]}`;
+        }
+        document.getElementById('feedbackExplanation').innerText = q.rationale || "暂无此题解析。";
+      } else {
+        feedbackBox.classList.add('hidden');
+      }
+
+      document.getElementById('btnPrev').disabled = state.currentIndex === 0;
+      
+      const isLast = state.currentIndex === state.activeQuestions.length - 1;
+      document.getElementById('btnNext').classList.toggle('hidden', isLast);
+      document.getElementById('btnSubmitExam').classList.toggle('hidden', !isLast);
+
+      updateAnsweredRatio();
+      renderNavGrid();
+    }
+
+    function selectOption(optIndex) {
+      if (state.isSubmitted && state.mode === 'exam') return;
+      const q = state.activeQuestions[state.currentIndex];
+      state.userAnswers[q.id] = optIndex;
+
+      if (state.mode === 'practice') {
+        if (optIndex !== q.answer) {
+          state.mistakeIds.add(q.id);
+        } else {
+          state.mistakeIds.delete(q.id);
+        }
+        saveMistakesToStorage();
+      }
+
+      renderQuestion();
+      renderNavGrid();
+    }
+
+    function toggleBookmarkCurrent() {
+      const q = state.activeQuestions[state.currentIndex];
+      if (state.bookmarkedIds.has(q.id)) {
+        state.bookmarkedIds.delete(q.id);
+      } else {
+        state.bookmarkedIds.add(q.id);
+      }
+      saveBookmarksToStorage();
+      renderQuestion();
+      renderNavGrid();
+    }
+
+    function nextQuestion() {
+      if (state.currentIndex < state.activeQuestions.length - 1) {
+        state.currentIndex++;
+        renderQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      if (state.currentIndex > 0) {
+        state.currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    function jumpToQuestion(idx) {
+      state.currentIndex = idx;
+      renderQuestion();
+    }
+
+    function updateAnsweredRatio() {
+      const answeredCount = Object.keys(state.userAnswers).length;
+      document.getElementById('answeredRatio').innerText = `${answeredCount} / ${state.activeQuestions.length}`;
+    }
+
+    function renderNavGrid() {
+      const grid = document.getElementById('navGrid');
+      grid.innerHTML = '';
+
+      state.activeQuestions.forEach((q, idx) => {
+        const isAnswered = state.userAnswers[q.id] !== undefined;
+        const isCurrent = state.currentIndex === idx;
+        const isMarked = state.bookmarkedIds.has(q.id);
+
+        const item = document.createElement('button');
+        item.onclick = () => jumpToQuestion(idx);
+
+        let bgClass = 'bg-slate-100 text-slate-600 border-slate-200';
+        if (isCurrent) {
+          bgClass = 'bg-brand-600 text-white font-bold ring-2 ring-brand-300';
+        } else if (isMarked) {
+          bgClass = 'bg-amber-100 text-amber-900 border-amber-400 font-semibold';
+        } else if (isAnswered) {
+          bgClass = 'bg-blue-100 text-brand-800 border-brand-300 font-medium';
+        }
+
+        item.className = `h-8 rounded-lg text-xs flex items-center justify-center border transition relative ${bgClass}`;
+        item.innerText = idx + 1;
+
+        if (isMarked && !isCurrent) {
+          const dot = document.createElement('span');
+          dot.className = "w-1.5 h-1.5 rounded-full bg-amber-500 absolute top-0.5 right-0.5";
+          item.appendChild(dot);
+        }
+
+        grid.appendChild(item);
+      });
+    }
+
+    function submitExamPrompt() {
+      const unanswered = state.activeQuestions.length - Object.keys(state.userAnswers).length;
+      let msg = "您确定要结束作答并生成全真诊断成绩单吗？";
+      if (unanswered > 0) {
+        msg = `注意：您还有 ${unanswered} 道题目未作答！确定要交卷吗？`;
+      }
+      
+      alertModal(msg, () => {
+        submitExam();
+      }, true);
+    }
+
+    function submitExam() {
+      clearInterval(state.timerInterval);
+      state.isSubmitted = true;
+
+      let correctCount = 0;
+      const domainStats = {};
+
+      state.activeQuestions.forEach(q => {
+        const d = q.domain || "其他考纲";
+        if (!domainStats[d]) {
+          domainStats[d] = { total: 0, correct: 0 };
+        }
+        domainStats[d].total++;
+
+        const isCorrect = state.userAnswers[q.id] === q.answer;
+        if (isCorrect) {
+          correctCount++;
+          domainStats[d].correct++;
+          state.mistakeIds.delete(q.id);
+        } else {
+          state.mistakeIds.add(q.id);
+        }
+      });
+
+      saveMistakesToStorage();
+
+      const total = state.activeQuestions.length;
+      const ratio = correctCount / (total || 1);
+      const scaledScore = Math.round(100 + (ratio * 900));
+      const isPassed = scaledScore >= 700;
+
+      document.getElementById('scaledScoreDisplay').innerText = `${scaledScore} / 1000`;
+      document.getElementById('accuracyDisplay').innerText = `${Math.round(ratio * 100)}%`;
+      document.getElementById('correctRatioText').innerText = `${correctCount} / ${total} 题正确`;
+
+      const passBadge = document.getElementById('passFailBadge');
+      const statusIcon = document.getElementById('resultStatusIcon');
+      const statusTitle = document.getElementById('resultStatusTitle');
+
+      if (isPassed) {
+        passBadge.innerText = "PASS 通过";
+        passBadge.className = "text-2xl font-black text-emerald-600 mt-2";
+        statusIcon.innerText = "🎉";
+        statusIcon.className = "w-16 h-16 mx-auto rounded-full bg-emerald-100 text-3xl mb-3 flex items-center justify-center text-emerald-600";
+        statusTitle.innerText = "恭喜通过！(PASSED)";
+      } else {
+        passBadge.innerText = "FAIL 未通过";
+        passBadge.className = "text-2xl font-black text-rose-600 mt-2";
+        statusIcon.innerText = "⚠️";
+        statusIcon.className = "w-16 h-16 mx-auto rounded-full bg-rose-100 text-3xl mb-3 flex items-center justify-center text-rose-600";
+        statusTitle.innerText = "未能达到 700 分合格线";
+      }
+
+      const progressContainer = document.getElementById('domainProgressBars');
+      progressContainer.innerHTML = '';
+
+      for (const [dom, stat] of Object.entries(domainStats)) {
+        const domPct = Math.round((stat.correct / stat.total) * 100);
+        const row = document.createElement('div');
+        row.className = "bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs";
+        row.innerHTML = `
+          <div class="flex items-center justify-between font-semibold text-slate-700 mb-1.5">
+            <span>${dom}</span>
+            <span>${stat.correct}/${stat.total} (${domPct}%)</span>
+          </div>
+          <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+            <div class="${domPct >= 70 ? 'bg-emerald-500' : 'bg-amber-500'} h-full rounded-full transition-all duration-500" style="width: ${domPct}%"></div>
+          </div>
+        `;
+        progressContainer.appendChild(row);
+      }
+
+      const wrongCount = total - correctCount;
+      document.getElementById('wrongCountDisplay').innerText = wrongCount;
+      document.getElementById('btnReviewWrong').style.display = wrongCount > 0 ? 'inline-block' : 'none';
+
+      document.getElementById('quizScreen').classList.add('hidden');
+      document.getElementById('resultScreen').classList.remove('hidden');
+      document.getElementById('btnExitExam').classList.add('hidden');
+      document.getElementById('timerContainer').classList.add('hidden');
+    }
+
+    function reviewAllAnswers() {
+      state.mode = 'practice';
+      state.currentIndex = 0;
+      document.getElementById('resultScreen').classList.add('hidden');
+      document.getElementById('quizScreen').classList.remove('hidden');
+      renderQuestion();
+      renderNavGrid();
+    }
+
+    function reviewWrongAnswers() {
+      const wrongQuestions = state.activeQuestions.filter(q => state.userAnswers[q.id] !== q.answer);
+      if (wrongQuestions.length === 0) return;
+      state.mode = 'practice';
+      state.activeQuestions = wrongQuestions;
+      state.currentIndex = 0;
+      document.getElementById('resultScreen').classList.add('hidden');
+      document.getElementById('quizScreen').classList.remove('hidden');
+      renderQuestion();
+      renderNavGrid();
+    }
+
+    function returnToHome() {
+      clearInterval(state.timerInterval);
+      document.getElementById('resultScreen').classList.add('hidden');
+      document.getElementById('quizScreen').classList.add('hidden');
+      document.getElementById('homeScreen').classList.remove('hidden');
+      document.getElementById('btnExitExam').classList.add('hidden');
+      document.getElementById('timerContainer').classList.add('hidden');
+      updateTotalQuestionsBadge();
+      updateHomeBadges();
+    }
+
+    function confirmExitExam() {
+      alertModal("您确定要离开当前的测验吗？尚未提交的进度将丢失。", () => {
+        returnToHome();
+      }, true);
+    }
+
+    function alertModal(msg, onConfirm, showCancel = false) {
+      const existing = document.getElementById('customAlertModal');
+      if (existing) existing.remove();
+
+      const modal = document.createElement('div');
+      modal.id = 'customAlertModal';
+      modal.className = "fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4";
+      modal.innerHTML = `
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200">
+          <p class="text-sm font-semibold text-slate-800 leading-relaxed mb-5">${msg}</p>
+          <div class="flex justify-end space-x-2">
+            ${showCancel ? `<button id="modalCancelBtn" class="px-3.5 py-1.5 border border-slate-300 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 transition">取消</button>` : ''}
+            <button id="modalConfirmBtn" class="px-4 py-1.5 bg-brand-600 text-white rounded-lg text-xs font-bold hover:bg-brand-700 transition">确定</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      document.getElementById('modalConfirmBtn').onclick = () => {
+        modal.remove();
+        if (onConfirm) onConfirm();
+      };
+
+      if (showCancel) {
+        document.getElementById('modalCancelBtn').onclick = () => {
+          modal.remove();
+        };
+      }
+    }
+
+    function renderDomainFilters() {
+      const domains = [
+        "Domain 1: AI 和 ML 的基础知识",
+        "Domain 2: 生成式 AI 的基础知识",
+        "Domain 3: 基础模型的应用",
+        "Domain 4: 负责任 AI 的指南",
+        "Domain 5: 安全性、合规与管控"
+      ];
+
+      const container = document.getElementById('domainFilterButtons');
+      if (!container) return;
+      container.innerHTML = '';
+
+      domains.forEach(d => {
+        const btn = document.createElement('button');
+        btn.className = "text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:border-brand-500 hover:text-brand-600 font-medium transition text-slate-700";
+        btn.innerText = d.split(':')[0] + ' 专练';
+        btn.onclick = () => startPracticeMode(d.split(':')[0]);
+        container.appendChild(btn);
+      });
+    }
+
+    function toggleImportModal() {
+      const modal = document.getElementById('importModal');
+      if (modal) {
+        modal.classList.toggle('hidden');
+      }
+    }
+
+    function handleBackdropClick(event) {
+      if (event.target.id === 'importModal') {
+        toggleImportModal();
+      }
+    }
+
+    function handleImportQuestions() {
+      const textarea = document.getElementById('importJsonTextarea');
+      if (!textarea) return;
+      let text = textarea.value.trim();
+      if (!text) {
+        alertModal("请先在文字框中粘贴备份 JSON 内容。");
+        return;
+      }
+
+      if (text.startsWith('```')) {
+        text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+      }
+
+      try {
+        const parsed = JSON.parse(text);
+
+        if (!Array.isArray(parsed) && parsed.questions) {
+          const importedQuestions = parsed.questions || [];
+          const existingMap = new Map();
+          QUESTION_BANK.forEach(q => existingMap.set(q.id, q));
+          importedQuestions.forEach(q => existingMap.set(q.id, q));
+          QUESTION_BANK = Array.from(existingMap.values());
+
+          if (Array.isArray(parsed.bookmarks)) {
+            parsed.bookmarks.forEach(id => state.bookmarkedIds.add(id));
+            saveBookmarksToStorage();
+          }
+          if (Array.isArray(parsed.mistakes)) {
+            parsed.mistakes.forEach(id => state.mistakeIds.add(id));
+            saveMistakesToStorage();
+          }
+
+          localStorage.setItem('AWS_AIF_CUSTOM_QUESTIONS', JSON.stringify(QUESTION_BANK));
+          updateTotalQuestionsBadge();
+          updateHomeBadges();
+          toggleImportModal();
+          textarea.value = '';
+          alertModal(`全进度备份恢复成功！\n- 总题库：${QUESTION_BANK.length} 题\n- 恢复标记题：${state.bookmarkedIds.size} 题\n- 恢复错题：${state.mistakeIds.size} 题`);
+          return;
+        }
+
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const existingMap = new Map();
+          QUESTION_BANK.forEach(q => existingMap.set(q.id, q));
+
+          let newCount = 0;
+          parsed.forEach(q => {
+            if (!existingMap.has(q.id)) {
+              newCount++;
+            }
+            existingMap.set(q.id, q);
+          });
+
+          QUESTION_BANK = Array.from(existingMap.values());
+
+          try {
+            const storedExisting = JSON.parse(localStorage.getItem('AWS_AIF_CUSTOM_QUESTIONS') || '[]');
+            const customMap = new Map(storedExisting.map(q => [q.id, q]));
+            parsed.forEach(q => customMap.set(q.id, q));
+            localStorage.setItem('AWS_AIF_CUSTOM_QUESTIONS', JSON.stringify(Array.from(customMap.values())));
+          } catch(e) {
+            console.error("Storage save failed:", e);
+          }
+
+          updateTotalQuestionsBadge();
+          toggleImportModal();
+          textarea.value = '';
+          alertModal(`成功导入 ${parsed.length} 道题目（新增 ${newCount} 道）！目前总题库共 ${QUESTION_BANK.length} 题。`);
+        } else {
+          alertModal("格式错误：请输入有效的 JSON 题目数组或完整备份对象。");
+        }
+      } catch (e) {
+        alertModal(`JSON 解析错误：${e.message}。请确保粘贴的内容是完整的 JSON 数据。`);
+      }
+    }
+
+    function exportFullQuestionBank() {
+      try {
+        const fullBackup = {
+          version: "1.0",
+          exportDate: new Date().toISOString(),
+          totalQuestions: QUESTION_BANK.length,
+          questions: QUESTION_BANK,
+          bookmarks: Array.from(state.bookmarkedIds),
+          mistakes: Array.from(state.mistakeIds)
+        };
+
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullBackup, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `questions.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+      } catch (e) {
+        alertModal("导出题库失败：" + e.message);
+      }
+    }
+
+    function resetQuestionBank() {
+      alertModal("确定要清空本地浏览器中导入的自定义题目与错题标记，并恢复初始题库吗？", () => {
+        localStorage.removeItem('AWS_AIF_CUSTOM_QUESTIONS');
+        localStorage.removeItem('AWS_AIF_BOOKMARKS');
+        localStorage.removeItem('AWS_AIF_MISTAKES');
+        location.reload();
+      }, true);
+    }
+  </script>
+</body>
+</html>
