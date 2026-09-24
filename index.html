@@ -515,7 +515,7 @@
       {
         id: 5,
         domain: "Domain 1: AI 和 ML 的基础知识",
-        question: "A company has developed an ML model for image classification. The company wants to deploy the model to production so that a web application can use the model without managing underlying infrastructure. Which solution will meet these requirements?",
+        question: "A company has developed an ML model for image classification. The company wants to deploy the model to production so that a web application can use the model without managing any of the underlying infrastructure. Which solution will meet these requirements?",
         question_zh: "某公司开发了一个图像分类模型，希望将其部署到生产环境且无需管理任何底层基础设施。哪种方案满足要求？",
         options: [
           "Use Amazon SageMaker Serverless Inference to deploy the model.",
@@ -570,10 +570,30 @@
       isSubmitted: false
     };
 
+    /**
+     * 徹底清除選項中所有可能出現的劇透解釋、破折號標籤與透題備註
+     */
     function cleanOptionText(text) {
       if (!text) return '';
-      let cleaned = text.replace(/\s*[\(（](?:如|专用于|属于|基于|使用|仅用于|适用|适合|对标|内置|衡量|预测|惩罚|必须|核心|无监督|监督|由于|即|可用于|这是)[^\)）]*[\)）]\s*$/g, '');
-      return cleaned.trim();
+      let str = text;
+
+      // 1. 去除括號內帶有破折號/冒號後的補充解釋
+      // 例: " (Logistic regression model - 白盒可解释模型)" -> " (Logistic regression model)"
+      str = str.replace(/([（\(][^）\)]*?)\s*[-—–：:]\s*[\u4e00-\u9fa5]+[^）\)]*?([）\)])/g, '$1$2');
+
+      // 2. 去除帶有解釋關鍵字或列舉符號（、）的中文括號
+      // 例: " (模型透明度、预期用途与治理文档)" -> ""
+      // 例: " (全托管基础模型统一 API 平台)" -> ""
+      str = str.replace(/\s*[（\(][^）\)]*?(?:[\u4e00-\u9fa5]{2,}[、，,]|(?:如|专用于|属于|基于|使用|仅用于|适用|适合|对标|内置|衡量|预测|惩罚|必须|核心|无监督|监督|由于|即|可用于|这是|模型|透明|治理|文档|解释|白盒|黑盒|分析|审查|记录|调用|平台|工具|服务|审核|检测|扫描|微调|训练|成本|开销|防止|避免|预期用途|局限性|归档|规范|典型|手段|机制|选型|扩展|参数|直观|原则|特征|定义|专为)[^）\)]*?)[）\)]\s*/g, ' ');
+
+      // 3. 去除括號內全是中文詞彙的說明（保留純英文術語或簡寫如 (Embeddings)、(PDPs)）
+      // 例: " (物理归档并长期保存模型权重文件)" -> ""
+      str = str.replace(/\s*[（\(][\u4e00-\u9fa5\s、，,。！？——–-]+[）\)]\s*/g, ' ');
+
+      // 4. 去除結尾獨立的破折號註釋 e.g. " - 白盒可解释模型"
+      str = str.replace(/\s*[-—–]\s*[\u4e00-\u9fa5]{2,}.*$/g, '');
+
+      return str.trim();
     }
 
     function fisherYatesShuffle(array) {
@@ -586,7 +606,7 @@
     }
 
     /**
-     * NEW: Load from questions.json hosted on GitHub Pages if available
+     * Load from questions.json hosted on GitHub Pages if available
      */
     async function loadQuestionsFromCloud() {
       try {
@@ -865,6 +885,8 @@
 
       q.options.forEach((optEnRaw, idx) => {
         const optZhRaw = q.options_zh && q.options_zh[idx] ? q.options_zh[idx] : optEnRaw;
+        
+        // 核心調用：智慧清除劇透
         const optZh = cleanOptionText(optZhRaw);
         const optEn = cleanOptionText(optEnRaw);
 
