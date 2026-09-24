@@ -1,0 +1,362 @@
+[
+  {
+    "id": 107,
+    "domain": "Domain 1: AI 和 ML 的基础知识",
+    "question": "A company wants to build an ML application. Select and order the correct steps from the following list to develop a well-architected ML workload. Each step should be selected one time. (Select and order FOUR.)",
+    "question_zh": "【HOTSPOT 排序题】某公司希望构建一个机器学习应用。请从下列选项中选择并按正确顺序排列构建良好架构 ML 工作负载的步骤。每个步骤仅使用一次。(选择并排序 4 个步骤)",
+    "options": [
+      "Step 1: Define business goal and frame ML problem -> Step 2: Develop model -> Step 3: Deploy model -> Step 4: Monitor model",
+      "Step 1: Develop model -> Step 2: Define business goal and frame ML problem -> Step 3: Deploy model -> Step 4: Monitor model",
+      "Step 1: Define business goal and frame ML problem -> Step 2: Deploy model -> Step 3: Develop model -> Step 4: Monitor model",
+      "Step 1: Develop model -> Step 2: Deploy model -> Step 3: Monitor model -> Step 4: Define business goal and frame ML problem"
+    ],
+    "options_zh": [
+      "步骤 1：明确业务目标并构建 ML 问题 -> 步骤 2：开发模型 -> 步骤 3：部署模型 -> 步骤 4：监控模型",
+      "步骤 1：开发模型 -> 步骤 2：明确业务目标并构建 ML 问题 -> 步骤 3：部署模型 -> 步骤 4：监控模型",
+      "步骤 1：明确业务目标并构建 ML 问题 -> 步骤 2：部署模型 -> 步骤 3：开发模型 -> 步骤 4：监控模型",
+      "步骤 1：开发模型 -> 步骤 2：部署模型 -> 步骤 3：监控模型 -> 步骤 4：明确业务目标并构建 ML 问题"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：ML 完整生命周期标准工作流】\\n根据 AWS Well-Architected ML 架构指南，标准流水线顺序必须为：\\n1. Define business goal and frame ML problem（明确业务目标与问题框架）\\n2. Develop model（模型开发：包含数据清洗、特征工程、训练与评估）\\n3. Deploy model（将模型部署至线上托管端点）\\n4. Monitor model（生产环境持续监控模型质量与漂移）。"
+  },
+  {
+    "id": 111,
+    "domain": "Domain 5: 安全性、合规与管控",
+    "question": "A company is using a generative AI model to develop a digital assistant. The model's responses occasionally include undesirable and potentially harmful content. Match each mitigation action to the correct Amazon Bedrock Guardrails filtering policy. (Select FOUR)",
+    "question_zh": "【HOTSPOT 配对题】某公司在 Bedrock 上开发助手，偶现不良有害内容。请将每项缓解措施与正确的 Amazon Bedrock Guardrails 过滤策略进行对应配对：",
+    "options": [
+      "Harmful content -> Content filters; Illegal investment/legal advice -> Denied topics; Offensive terms -> Word filters; Ungrounded content -> Contextual grounding check",
+      "Harmful content -> Denied topics; Illegal investment/legal advice -> Content filters; Offensive terms -> Word filters; Ungrounded content -> Contextual grounding check",
+      "Harmful content -> Word filters; Illegal investment/legal advice -> Denied topics; Offensive terms -> Content filters; Ungrounded content -> Contextual grounding check",
+      "Harmful content -> Content filters; Illegal investment/legal advice -> Word filters; Offensive terms -> Denied topics; Ungrounded content -> Contextual grounding check"
+    ],
+    "options_zh": [
+      "有害/暴力内容 -> 内容过滤器 (Content filters)；非法投资/法律建议 -> 拒绝主题 (Denied topics)；特定冒犯词汇 -> 词汇过滤器 (Word filters)；无依据/幻觉内容 -> 上下文接地检查 (Contextual grounding check)",
+      "有害/暴力内容 -> 拒绝主题；非法投资/法律建议 -> 内容过滤器；特定冒犯词汇 -> 词汇过滤器；无依据/幻觉内容 -> 上下文接地检查",
+      "有害/暴力内容 -> 词汇过滤器；非法投资/法律建议 -> 拒绝主题；特定冒犯词汇 -> 内容过滤器；无依据/幻觉内容 -> 上下文接地检查",
+      "有害/暴力内容 -> 内容过滤器；非法投资/法律建议 -> 词汇过滤器；特定冒犯词汇 -> 拒绝主题；无依据/幻觉内容 -> 上下文接地检查"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：Amazon Bedrock Guardrails 四大过滤机制】\\n- 阻断仇恨、暴力、侮辱等不良行为 -> Content filters\\n- 设定不希望模型涉及的业务主题（如投资、法律建议） -> Denied topics\\n- 侦测并过滤特定敏感或粗俗字词 -> Word filters\\n- 检验生成内容是否基于知识库文档事实并遏制幻觉 -> Contextual grounding check。"
+  },
+  {
+    "id": 120,
+    "domain": "Domain 3: 基础模型的应用",
+    "question": "A company wants to create an application to summarize meetings by using meeting audio recordings. Select and order the correct steps from the following list. Use each step only once or not at all. (Select and order THREE)",
+    "question_zh": "【HOTSPOT 选择并排序题】某公司希望使用会议录音构建自动摘要应用。请从选项中选出并按正确顺序排列必须的 3 个步骤：",
+    "options": [
+      "Step 1: Store audio in Amazon S3 -> Step 2: Convert audio to text using Amazon Transcribe -> Step 3: Summarize text using Amazon Bedrock",
+      "Step 1: Store audio in Amazon EBS -> Step 2: Convert audio to text using Amazon Polly -> Step 3: Summarize text using Amazon Bedrock",
+      "Step 1: Store audio in Amazon S3 -> Step 2: Convert audio to text using Amazon Transcribe -> Step 3: Summarize text using Amazon Lex",
+      "Step 1: Store audio in Amazon S3 -> Step 2: Convert audio to text using Amazon Polly -> Step 3: Summarize text using Amazon Bedrock"
+    ],
+    "options_zh": [
+      "步骤 1：将会议音频存储至 Amazon S3 -> 步骤 2：使用 Amazon Transcribe 将语音转录为文本 -> 步骤 3：使用 Amazon Bedrock 汇总生成会议摘要",
+      "步骤 1：存储在 EBS -> 步骤 2：使用 Polly 转换音频 -> 步骤 3：使用 Bedrock 汇总",
+      "步骤 1：存储在 S3 -> 步骤 2：使用 Transcribe 转换 -> 步骤 3：使用 Amazon Lex 汇总",
+      "步骤 1：存储在 S3 -> 步骤 2：使用 Polly 转换 -> 步骤 3：使用 Bedrock 汇总"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：语音摘要流水线服务选型】\\n1. S3 提供对象存储来接收音频文件；\\n2. Amazon Transcribe 执行语音转文字 (ASR)；\\n3. Amazon Bedrock 托管大语言模型进行文本摘要。\\n干扰项排除：Amazon Polly 是文字转语音 (TTS)；EBS 是块存储无法作为解耦流水线共享介质；Amazon Lex 是对话机器人服务。"
+  },
+  {
+    "id": 128,
+    "domain": "Domain 1: AI 和 ML 的基础知识",
+    "question": "A company wants to develop ML applications. Select the correct ML paradigm for each use case: 1) Binary classification, 2) Multi-class classification, 3) K-means clustering, 4) Dimensionality reduction. (Select FOUR)",
+    "question_zh": "【HOTSPOT 配对题】请为以下四个机器学习场景匹配正确的机器学习范式 (Supervised vs Unsupervised)：\\n1) 二元分类，2) 多类别分类，3) K-means 聚类，4) 降维分析",
+    "options": [
+      "1: Supervised learning; 2: Supervised learning; 3: Unsupervised learning; 4: Unsupervised learning",
+      "1: Supervised learning; 2: Unsupervised learning; 3: Supervised learning; 4: Unsupervised learning",
+      "1: Unsupervised learning; 2: Unsupervised learning; 3: Supervised learning; 4: Supervised learning",
+      "1: Supervised learning; 2: Supervised learning; 3: Supervised learning; 4: Unsupervised learning"
+    ],
+    "options_zh": [
+      "1: 监督学习；2: 监督学习；3: 无监督学习；4: 无监督学习",
+      "1: 监督学习；2: 无监督学习；3: 监督学习；4: 无监督学习",
+      "1: 无监督学习；2: 无监督学习；3: 监督学习；4: 监督学习",
+      "1: 监督学习；2: 监督学习；3: 监督学习；4: 无监督学习"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：监督学习 vs 无监督学习分类】\\n- 监督学习 (Supervised Learning)：依赖有标签数据，包含二元分类 (Binary classification) 与多类别分类 (Multi-class classification)。\\n- 无监督学习 (Unsupervised Learning)：处理无标签数据，包含样本聚类 (K-means clustering) 与数据降维 (Dimensionality reduction，如 PCA)。"
+  },
+  {
+    "id": 141,
+    "domain": "Domain 1: AI 和 ML 的基础知识",
+    "question": "A company is using Amazon SageMaker to develop AI models. Select the correct SageMaker feature for each step of the lifecycle: 1) Managing different versions of the model; 2) Using the current model to make predictions. (Select TWO)",
+    "question_zh": "【HOTSPOT 配对题】某公司使用 SageMaker 开发模型，请为生命周期中的两个步骤选择对应的正确组件：\\n1) 管理模型的不同版本；2) 使用当前模型进行在线推理预测",
+    "options": [
+      "1: SageMaker Model Registry; 2: SageMaker Serverless Inference",
+      "1: SageMaker Clarify; 2: SageMaker Serverless Inference",
+      "1: SageMaker Model Registry; 2: SageMaker Clarify",
+      "1: SageMaker Feature Store; 2: SageMaker Model Registry"
+    ],
+    "options_zh": [
+      "1: SageMaker Model Registry (模型注册表)；2: SageMaker Serverless Inference (无服务器推理端点)",
+      "1: SageMaker Clarify；2: SageMaker Serverless Inference",
+      "1: SageMaker Model Registry；2: SageMaker Clarify",
+      "1: SageMaker Feature Store；2: SageMaker Model Registry"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：SageMaker 核心组件职责】\\n- 管理模型版本、生命周期状态与审批发布 -> SageMaker Model Registry；\\n- 提供在线接口接收请求并执行预测 -> SageMaker Serverless Inference（或托管端点）；\\n未使用的组件：SageMaker Clarify 专用于偏见检测与 SHAP 特征可解释性。"
+  },
+  {
+    "id": 153,
+    "domain": "Domain 2: 生成式 AI 的基础知识",
+    "question": "A company wants to develop a solution using generative AI for product advertisements. Select the correct model type for each action: 1) Create high-quality images; 2) Create contextually relevant slogans; 3) Ensure company logo/branding elements are correctly placed in images. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】某公司开发广告生成方案，请为以下三个动作匹配正确的模型类型：\\n1) 创建高质量展示图片；2) 创建上下文相关的宣传标语；3) 确保公司品牌 Logo 等元素在图片中正确摆放定位",
+    "options": [
+      "1: Diffusion model; 2: Transformer-based model; 3: Object detection model",
+      "1: Transformer-based model; 2: Diffusion model; 3: Object detection model",
+      "1: Diffusion model; 2: Object detection model; 3: Transformer-based model",
+      "1: Object detection model; 2: Transformer-based model; 3: Diffusion model"
+    ],
+    "options_zh": [
+      "1: 扩散模型 (Diffusion model)；2: 基于 Transformer 的大语言模型；3: 目标检测模型 (Object detection model)",
+      "1: 基于 Transformer 的大语言模型；2: 扩散模型；3: 目标检测模型",
+      "1: 扩散模型；2: 目标检测模型；3: 基于 Transformer 的大语言模型",
+      "1: 目标检测模型；2: 基于 Transformer 的大语言模型；3: 扩散模型"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：生成式与视觉模型类型对应】\\n1. 合成逼真图像 -> 扩散模型 (Diffusion Model，如 Stable Diffusion, Nova Canvas)；\\n2. 创作宣传标语文本 -> 基于 Transformer 的文本生成大模型；\\n3. 在图像中精确定位元素边界框并识别位置 -> 目标检测模型 (Object Detection)。"
+  },
+  {
+    "id": 163,
+    "domain": "Domain 1: AI 和 ML 的基础知识",
+    "question": "Select the correct AI term for each statement: 1) Simulates human problem-solving capabilities; 2) Applies data-driven learning techniques to make predictions; 3) Focuses on processing data through intricate neural networks. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】请为以下三段陈述选择对应的 AI 层级术语：\\n1) 模拟人类解决问题与认知能力的广泛领域；2) 应用数据驱动学习技术做出预测；3) 专注于利用深层复杂神经网络处理数据",
+    "options": [
+      "1: AI; 2: ML; 3: Deep learning",
+      "1: ML; 2: AI; 3: Deep learning",
+      "1: Deep learning; 2: ML; 3: AI",
+      "1: AI; 2: Deep learning; 3: ML"
+    ],
+    "options_zh": [
+      "1: 人工智能 (AI)；2: 机器学习 (ML)；3: 深度学习 (Deep learning)",
+      "1: 机器学习；2: 人工智能；3: 深度学习",
+      "1: 深度学习；2: 机器学习；3: 人工智能",
+      "1: 人工智能；2: 深度学习；3: 机器学习"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：AI、ML 与深度学习的包含关系】\\n- AI（人工智能）：涵盖模拟人类问题解决与决策能力的最高层级广泛领域；\\n- ML（机器学习）：AI 的子集，侧重于从数据中自动学习规律并进行预测；\\n- Deep Learning（深度学习）：ML 的子集，依赖多层深层神经网络处理复杂非结构化数据。"
+  },
+  {
+    "id": 165,
+    "domain": "Domain 3: 基础模型的应用",
+    "question": "A company wants more customized responses from its generative AI model. Select the correct customization method for each use case: 1) The models must be taught a new domain-specific task; 2) A limited amount of labeled data is available and more data is needed; 3) Only unlabeled data is available. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】请为以下三种模型定制场景匹配最佳技术方案：\\n1) 需要教导模型执行特定的全新领域任务；2) 标注数据极少，需要扩充更多有效数据；3) 仅拥有特定领域的无标注数据",
+    "options": [
+      "1: Model fine-tuning; 2: Data augmentation; 3: Continued pre-training",
+      "1: Continued pre-training; 2: Data augmentation; 3: Model fine-tuning",
+      "1: Model fine-tuning; 2: Continued pre-training; 3: Data augmentation",
+      "1: Data augmentation; 2: Model fine-tuning; 3: Continued pre-training"
+    ],
+    "options_zh": [
+      "1: 模型微调 (Model fine-tuning)；2: 数据增强 (Data augmentation)；3: 持续预训练 (Continued pre-training)",
+      "1: 持续预训练；2: 数据增强；3: 模型微调",
+      "1: 模型微调；2: 持续预训练；3: 数据增强",
+      "1: 数据增强；2: 模型微调；3: 持续预训练"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：基础模型定制化手段对比】\\n1. 在特定任务上有监督学习 -> 模型微调 (Fine-tuning)；\\n2. 样本有限时通过几何变换或合成增加数据量 -> 数据增强 (Data augmentation)；\\n3. 吸收垂直行业未标注语料以学习领域常识 -> 持续预训练 (Continued pre-training)。"
+  },
+  {
+    "id": 188,
+    "domain": "Domain 1: AI 和 ML 的基础知识",
+    "question": "A company has multiple datasets that contain historical data. Select the correct ML technique for each dataset: 1) Text-based customer reviews; 2) Images of animals labeled with species names; 3) Daily sales volumes of products over time. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】某公司拥有多个历史数据集，请为各数据集选择对应的机器学习技术：\\n1) 包含客户文本评价的数据集；2) 标注了物种名称的动物图像数据集；3) 包含产品每日销售量随时间变化的数据集",
+    "options": [
+      "1: Natural language processing (NLP); 2: Computer vision; 3: Time series forecasting",
+      "1: Computer vision; 2: Natural language processing; 3: Time series forecasting",
+      "1: Natural language processing; 2: Reinforcement learning; 3: Computer vision",
+      "1: Time series forecasting; 2: Computer vision; 3: Natural language processing"
+    ],
+    "options_zh": [
+      "1: 自然语言处理 (NLP)；2: 计算机视觉 (Computer vision)；3: 时间序列预测 (Time series forecasting)",
+      "1: 计算机视觉；2: 自然语言处理；3: 时间序列预测",
+      "1: 自然语言处理；2: 强化学习；3: 计算机视觉",
+      "1: 时间序列预测；2: 计算机视觉；3: 自然语言处理"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：常见数据模态与任务类型映射】\\n- 文本客户评价 -> NLP（自然语言处理，用于情感分析或意图识别）；\\n- 动物图片物种标注 -> Computer Vision（计算机视觉图像分类）；\\n- 包含时间维度的连续销量数据 -> Time Series Forecasting（时间序列预测）。"
+  },
+  {
+    "id": 198,
+    "domain": "Domain 2: 生成式 AI 的基础知识",
+    "question": "A company is reviewing foundation model (FM) characteristics. Select the correct FM characteristic for each scenario: 1) Ability of the model to handle multiple requests simultaneously; 2) Upper limit of input and output tokens a model can process; 3) Time required for a model to respond to a request. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】请为以下基础模型场景匹配正确的特性术语：\\n1) 模型能够同时承接并处理多个请求的能力；2) 模型单次能够处理的输入与输出 Token 数量上限；3) 模型接收请求到返回响应所耗费的时长",
+    "options": [
+      "1: Concurrency; 2: Context windows; 3: Latency",
+      "1: Latency; 2: Context windows; 3: Concurrency",
+      "1: Concurrency; 2: Latency; 3: Context windows",
+      "1: Context windows; 2: Concurrency; 3: Latency"
+    ],
+    "options_zh": [
+      "1: 并发能力 (Concurrency)；2: 上下文窗口 (Context windows)；3: 延迟 (Latency)",
+      "1: 延迟；2: 上下文窗口；3: 并发能力",
+      "1: 并发能力；2: 延迟；3: 上下文窗口",
+      "1: 上下文窗口；2: 并发能力；3: 延迟"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：基础模型关键技术参数】\\n- 同时处理并发请求 -> Concurrency（并发度）；\\n- 单次交互的最大 Token 承载上限 -> Context Window（上下文窗口）；\\n- 端到端响应处理时间 -> Latency（推理延迟）。"
+  },
+  {
+    "id": 211,
+    "domain": "Domain 2: 生成式 AI 的基础知识",
+    "question": "An e-commerce company is developing a generative AI solution for personalized recommendations. Select the correct business metric for each business goal: 1) Measure the purchase rate of recommended products; 2) Measure how frequently users click on recommended products; 3) Measure overall spending per user across the platform. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】电商公司上线 AI 推荐系统，请为以下商业目标匹配最直接的衡量业务指标：\\n1) 衡量收到推荐后完成实际购买的比例；2) 衡量用户点击推荐商品的频繁程度；3) 衡量平台用户平均整体消费金额",
+    "options": [
+      "1: Conversion rate; 2: Click-through rate (CTR); 3: Average revenue per user (ARPU)",
+      "1: Click-through rate; 2: Conversion rate; 3: Average revenue per user",
+      "1: Average revenue per user; 2: Click-through rate; 3: Conversion rate",
+      "1: Conversion rate; 2: Average revenue per user; 3: Click-through rate"
+    ],
+    "options_zh": [
+      "1: 转化率 (Conversion rate)；2: 点击率 (Click-through rate / CTR)；3: 每用户平均收入 (Average revenue per user / ARPU)",
+      "1: 点击率；2: 转化率；3: 每用户平均收入",
+      "1: 每用户平均收入；2: 点击率；3: 转化率",
+      "1: 转化率；2: 每用户平均收入；3: 点击率"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：生成式 AI 商业价值 ROI 指标】\\n- 促成下单购买的比例 -> Conversion rate（转化率）；\\n- 浏览到发生点击的比率 -> Click-through rate (CTR)；\\n- 衡量平台用户整体贡献的商业价值 -> Average Revenue Per User (ARPU)。"
+  },
+  {
+    "id": 215,
+    "domain": "Domain 3: 基础模型的应用",
+    "question": "A company wants to improve multiple ML models. Select the correct technique for each use case: 1) Augment LLM capabilities by using external data sources; 2) Query the model without providing any examples; 3) Adapt the model by using a domain-specific labeled dataset. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】某公司需要改进多个模型方案，请选择正确的技术手段：\\n1) 借助外部数据源增强大语言模型的能力；2) 在不提供任何示例的情况下向模型提问；3) 使用特定垂直领域的标注数据集调整模型参数",
+    "options": [
+      "1: Retrieval Augmented Generation (RAG); 2: Zero-shot learning; 3: Fine-tuning",
+      "1: Fine-tuning; 2: Zero-shot learning; 3: Retrieval Augmented Generation (RAG)",
+      "1: Retrieval Augmented Generation (RAG); 2: Few-shot learning; 3: Fine-tuning",
+      "1: Zero-shot learning; 2: Retrieval Augmented Generation (RAG); 3: Fine-tuning"
+    ],
+    "options_zh": [
+      "1: 检索增强生成 (RAG)；2: 零样本学习 (Zero-shot learning)；3: 微调 (Fine-tuning)",
+      "1: 微调；2: 零样本学习；3: 检索增强生成 (RAG)",
+      "1: 检索增强生成 (RAG)；2: 少样本学习；3: 微调",
+      "1: 零样本学习；2: 检索增强生成 (RAG)；3: 微调"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：模型优化技术区分】\\n1. 挂载外部知识库增强上下文 -> RAG；\\n2. 直接给提示词且不给任何样例示范 -> Zero-shot（零样本）；\\n3. 在垂直数据集上训练微调模型内部权重 -> Fine-tuning。"
+  },
+  {
+    "id": 236,
+    "domain": "Domain 1: AI 和 ML 的基础知识",
+    "question": "Order the following steps to correctly describe the ML lifecycle for a new custom model. (Select and order FOUR)",
+    "question_zh": "【HOTSPOT 排序题】请对以下步骤进行正确排序，完整描述构建一个全新自建机器学习模型的生命周期：",
+    "options": [
+      "Step 1: Define the business objective -> Step 2: Process the data -> Step 3: Develop and train the model -> Step 4: Deploy the model",
+      "Step 1: Process the data -> Step 2: Define the business objective -> Step 3: Develop and train the model -> Step 4: Deploy the model",
+      "Step 1: Define the business objective -> Step 2: Develop and train the model -> Step 3: Process the data -> Step 4: Deploy the model",
+      "Step 1: Develop and train the model -> Step 2: Process the data -> Step 3: Deploy the model -> Step 4: Define the business objective"
+    ],
+    "options_zh": [
+      "步骤 1：确定业务目标 -> 步骤 2：处理与准备数据 -> 步骤 3：开发并训练模型 -> 步骤 4：部署模型上线",
+      "步骤 1：处理数据 -> 步骤 2：确定业务目标 -> 步骤 3：开发训练模型 -> 步骤 4：部署模型",
+      "步骤 1：确定业务目标 -> 步骤 2：开发训练模型 -> 步骤 3：处理数据 -> 步骤 4：部署模型",
+      "步骤 1：开发训练模型 -> 步骤 2：处理数据 -> 步骤 3：部署模型 -> 步骤 4：确定业务目标"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：自建模型 ML 生命周期核心顺序】\\n标准流程始于明确商业诉求（Define business objective），随后进行数据预处理（Process data），继而进行算法开发与训练（Develop and train），最终将模型部署至生产环境（Deploy）。"
+  },
+  {
+    "id": 241,
+    "domain": "Domain 4: 负责任 AI 的指南",
+    "question": "Which three responsible AI principles apply to each scenario description? 1) Encrypt application data and isolate the application on a private network; 2) Evaluate the impact on different demographic groups; 3) Test the application with unexpected inputs to ensure reliability. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】请为以下三种工程实践匹配最核心的负责任 AI 原则：\\n1) 加密应用数据并将应用隔离在专有私有网络内；2) 评估不同人口特征群体受到的算法影响；3) 使用异常意外数据测试系统以确保在特殊情况下仍可靠运行",
+    "options": [
+      "1: Privacy and security; 2: Fairness; 3: Robustness",
+      "1: Fairness; 2: Privacy and security; 3: Robustness",
+      "1: Privacy and security; 2: Explainability; 3: Safety",
+      "1: Robustness; 2: Fairness; 3: Privacy and security"
+    ],
+    "options_zh": [
+      "1: 隐私与安全性 (Privacy and security)；2: 公平性 (Fairness)；3: 稳健性 (Robustness)",
+      "1: 公平性；2: 隐私与安全性；3: 稳健性",
+      "1: 隐私与安全性；2: 可解释性；3: 安全性",
+      "1: 稳健性；2: 公平性；3: 隐私与安全性"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：AWS 负责任 AI 原则映射】\\n1. 数据传输/存储加密与网络专网隔离 -> Privacy and security（隐私与安全）；\\n2. 排查算法对各人群的无偏袒表现 -> Fairness（公平性）；\\n3. 系统在面对恶劣或反常边缘数据输入时保持稳定不崩溃 -> Robustness（稳健性）。"
+  },
+  {
+    "id": 243,
+    "domain": "Domain 1: AI 和 ML 的基础知识",
+    "question": "A company has developed an LLM. Select the appropriate inference mode for each team: 1) Chatbot needs minimal latency to understand user intent; 2) Weekend workload querying gigabytes of text files; 3) Engineering API to process short text snippets with low latency. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】某公司需要为不同业务团队选择最匹配的推论模式 (Inference Mode)：\\n1) 聊天机器人需要极低延迟来理解用户意图；2) 周末定时查询并批处理数 GB 的文本文件；3) 工程团队 API 需要处理短文本并提供低延迟响应",
+    "options": [
+      "1: Real-time inference; 2: Batch transform; 3: Real-time inference",
+      "1: Batch transform; 2: Real-time inference; 3: Real-time inference",
+      "1: Real-time inference; 2: Real-time inference; 3: Batch transform",
+      "1: Batch transform; 2: Batch transform; 3: Real-time inference"
+    ],
+    "options_zh": [
+      "1: 实时推理 (Real-time inference)；2: 批量转换 (Batch transform)；3: 实时推理 (Real-time inference)",
+      "1: 批量转换；2: 实时推理；3: 实时推理",
+      "1: 实时推理；2: 实时推理；3: 批量转换",
+      "1: 批量转换；2: 批量转换；3: 实时推理"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：SageMaker / Bedrock 推理模式选型】\\n- 实时在线交互、低延迟需求（客服机器人、实时 API）必须选用 Real-time inference；\\n- 离线、非实时、周末定时海量大文件处理，选用 Batch transform（批量转换）成本最低。"
+  },
+  {
+    "id": 343,
+    "domain": "Domain 3: 基础模型的应用",
+    "question": "Select the correct foundation model customization method for each scenario: 1) Provide labeled data to improve performance on a specific task; 2) Provide unlabeled domain data to adapt an FM to a specific domain; 3) Transfer knowledge from a larger model into a smaller model. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】请为以下基础模型定制化场景选择正确的方法：\\n1) 提供标注数据以改善特定任务的模型表现；2) 提供海量未标注领域数据使模型掌握行业知识；3) 将大模型的知识提炼转移到参数量更小的模型中",
+    "options": [
+      "1: Fine-tuning; 2: Continued pre-training; 3: Distillation",
+      "1: Continued pre-training; 2: Fine-tuning; 3: Distillation",
+      "1: Fine-tuning; 2: Distillation; 3: Continued pre-training",
+      "1: Distillation; 2: Continued pre-training; 3: Fine-tuning"
+    ],
+    "options_zh": [
+      "1: 微调 (Fine-tuning)；2: 持续预训练 (Continued pre-training)；3: 知识蒸馏 (Distillation)",
+      "1: 持续预训练；2: 微调；3: 知识蒸馏",
+      "1: 微调；2: 知识蒸馏；3: 持续预训练",
+      "1: 知识蒸馏；2: 持续预训练；3: 微调"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：模型定制技术图谱】\\n1. 在任务专有有标签数据上调优 -> Fine-tuning（微调）；\\n2. 在垂直行业无标签语料上继续无监督预训练 -> Continued pre-training（持续预训练）；\\n3. 老师模型教导学生模型，压缩模型体积 -> Distillation（模型蒸馏）。"
+  },
+  {
+    "id": 361,
+    "domain": "Domain 1: AI 和 ML 的基础知识",
+    "question": "Determine the appropriate data type for each use case: 1) Sentiment analysis on social media posts; 2) Train autonomous vehicles to recognize traffic signs; 3) Customer demographics and purchase history for ads; 4) Predict stock prices from historical prices. (Select FOUR)",
+    "question_zh": "【HOTSPOT 配对题】请为以下四个应用场景匹配正确的数据类型：\\n1) 针对社交媒体推文进行情感分析；2) 训练自动驾驶汽车识别道路交通标志；3) 利用客户人口统计信息与购买记录优化广告；4) 使用历史价格变动预测股票价格",
+    "options": [
+      "1: Text data; 2: Image data; 3: Tabular data; 4: Time series data",
+      "1: Tabular data; 2: Image data; 3: Text data; 4: Time series data",
+      "1: Text data; 2: Time series data; 3: Tabular data; 4: Image data",
+      "1: Time series data; 2: Image data; 3: Tabular data; 4: Text data"
+    ],
+    "options_zh": [
+      "1: 文本数据 (Text data)；2: 图像数据 (Image data)；3: 表格结构化数据 (Tabular data)；4: 时间序列数据 (Time series data)",
+      "1: 表格数据；2: 图像数据；3: 文本数据；4: 时间序列数据",
+      "1: 文本数据；2: 时间序列数据；3: 表格数据；4: 图像数据",
+      "1: 时间序列数据；2: 图像数据；3: 表格数据；4: 文本数据"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：数据类型与实际应用映射】\\n- 社交推文 -> Text data（文本数据）；\\n- 摄像头路牌标志 -> Image data（图像视觉数据）；\\n- 人口特征与购物历史二维表 -> Tabular data（结构化表格数据）；\\n- 随时间推移的股票连续波动行情 -> Time series data（时间序列数据）。"
+  },
+  {
+    "id": 364,
+    "domain": "Domain 3: 基础模型的应用",
+    "question": "Select the correct prompt engineering technique for each description: 1) Provide a few examples before generating output; 2) Prompt model to explain its step-by-step reasoning process; 3) Prompt model to perform a task without providing any examples. (Select THREE)",
+    "question_zh": "【HOTSPOT 配对题】请为以下提示词工程描述选择正确的术语：\\n1) 在生成输出前提供少量高质量示范范例；2) 提示模型将得出最终答案的过程拆解为逐步推理；3) 仅下达任务指令而不提供任何示例",
+    "options": [
+      "1: Few-shot prompting; 2: Chain-of-thought prompting; 3: Zero-shot prompting",
+      "1: Zero-shot prompting; 2: Chain-of-thought prompting; 3: Few-shot prompting",
+      "1: Few-shot prompting; 2: Role-based prompting; 3: Zero-shot prompting",
+      "1: Single-shot prompting; 2: Chain-of-thought prompting; 3: Zero-shot prompting"
+    ],
+    "options_zh": [
+      "1: 少样本提示 (Few-shot prompting)；2: 思维链提示 (Chain-of-thought prompting)；3: 零样本提示 (Zero-shot prompting)",
+      "1: 零样本提示；2: 思维链提示；3: 少样本提示",
+      "1: 少样本提示；2: 基于角色的提示；3: 零样本提示",
+      "1: 单样本提示；2: 思维链提示；3: 零样本提示"
+    ],
+    "answer": 0,
+    "rationale": "【核心考点：经典提示词工程手段辨析】\\n- 提供 2~5 个输入输出样例 -> Few-shot prompting（少样本提示）；\\n- 引导模型拆解逻辑推导过程（Let's think step by step） -> Chain-of-thought prompting（思维链提示）；\\n- 仅提供指令、完全不附带样例 -> Zero-shot prompting（零样本提示）。"
+  }
+]
