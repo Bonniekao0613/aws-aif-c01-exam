@@ -578,16 +578,12 @@
       let str = text;
 
       // 1. 去除括號內帶有破折號/冒號後的補充解釋
-      // 例: " (Logistic regression model - 白盒可解释模型)" -> " (Logistic regression model)"
       str = str.replace(/([（\(][^）\)]*?)\s*[-—–：:]\s*[\u4e00-\u9fa5]+[^）\)]*?([）\)])/g, '$1$2');
 
       // 2. 去除帶有解釋關鍵字或列舉符號（、）的中文括號
-      // 例: " (模型透明度、预期用途与治理文档)" -> ""
-      // 例: " (全托管基础模型统一 API 平台)" -> ""
       str = str.replace(/\s*[（\(][^）\)]*?(?:[\u4e00-\u9fa5]{2,}[、，,]|(?:如|专用于|属于|基于|使用|仅用于|适用|适合|对标|内置|衡量|预测|惩罚|必须|核心|无监督|监督|由于|即|可用于|这是|模型|透明|治理|文档|解释|白盒|黑盒|分析|审查|记录|调用|平台|工具|服务|审核|检测|扫描|微调|训练|成本|开销|防止|避免|预期用途|局限性|归档|规范|典型|手段|机制|选型|扩展|参数|直观|原则|特征|定义|专为)[^）\)]*?)[）\)]\s*/g, ' ');
 
       // 3. 去除括號內全是中文詞彙的說明（保留純英文術語或簡寫如 (Embeddings)、(PDPs)）
-      // 例: " (物理归档并长期保存模型权重文件)" -> ""
       str = str.replace(/\s*[（\(][\u4e00-\u9fa5\s、，,。！？——–-]+[）\)]\s*/g, ' ');
 
       // 4. 去除結尾獨立的破折號註釋 e.g. " - 白盒可解释模型"
@@ -620,12 +616,22 @@
             list.forEach(q => existingMap.set(q.id, q));
             QUESTION_BANK = Array.from(existingMap.values());
 
+            // 關鍵升級：同步雲端標記（Bookmarks）與錯題（Mistakes）
+            if (data && Array.isArray(data.bookmarks)) {
+              data.bookmarks.forEach(id => state.bookmarkedIds.add(id));
+              saveBookmarksToStorage();
+            }
+            if (data && Array.isArray(data.mistakes)) {
+              data.mistakes.forEach(id => state.mistakeIds.add(id));
+              saveMistakesToStorage();
+            }
+
             const badge = document.getElementById('cloudStatusBadge');
             if (badge) {
               badge.innerText = `☁ 雲端全量題庫 (${QUESTION_BANK.length} 題已連線)`;
               badge.classList.remove('hidden');
             }
-            console.log(`Cloud bank loaded successfully: ${QUESTION_BANK.length} questions`);
+            console.log(`Cloud bank loaded successfully: ${QUESTION_BANK.length} questions, ${state.bookmarkedIds.size} bookmarks`);
           }
         }
       } catch (e) {
